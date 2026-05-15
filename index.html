@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haseeb Ahmed — Flutter Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #080c10;
+    --bg2: #0d1117;
+    --bg3: #111820;
+    --surface: #141c26;
+    --border: rgba(255,255,255,0.07);
+    --accent: #00d4ff;
+    --accent2: #0099cc;
+    --accent-glow: rgba(0, 212, 255, 0.15);
+    --text: #e8edf2;
+    --text-muted: #7a8a9a;
+    --text-dim: #4a5a6a;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(8, 12, 16, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0, 212, 255, 0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(0, 153, 204, 0.04) 0%, transparent 60%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.4s;
+  }
+
+  .hero h1 .line2 {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.25);
+  }
+
+  .hero h1 .accent { color: var(--accent); -webkit-text-stroke: 0; }
+
+  .hero-desc {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.6s;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.8s;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #080c10;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn-primary:hover::before { opacity: 0.1; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text);
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(0, 212, 255, 0.3);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  .hero-stats {
+    position: absolute;
+    right: 48px;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    opacity: 0;
+    animation: fadeLeft 0.7s ease forwards 1s;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .stat-num span { color: var(--accent); }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(24px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 100px 48px;
+    position: relative;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    height: 1px;
+    width: 40px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 16px;
+    font-weight: 300;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+
+  /* ABOUT */
+  .about { background: var(--bg2); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1100px;
+  }
+
+  .about-text p {
+    color: var(--text-muted);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .about-text p strong { color: var(--text); font-weight: 500; }
+
+  .about-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .about-card:hover {
+    border-color: rgba(0, 212, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .about-card-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  .about-card h4 {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+
+  .about-card p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+  }
+
+  .project-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+
+  .project-card:hover {
+    border-color: rgba(0, 212, 255, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 212, 255, 0.1);
+  }
+
+  .project-card.featured {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .project-visual {
+    background: var(--surface);
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card.featured .project-visual {
+    height: 100%;
+    min-height: 280px;
+  }
+
+  .project-visual-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    position: relative;
+  }
+
+  .project-visual-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%);
+  }
+
+  /* Project color schemes */
+  .pv-invoice { background: linear-gradient(135deg, #0d1117 0%, #111c2a 100%); }
+  .pv-invoice .project-visual-inner::before { background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.12) 0%, transparent 70%); }
+
+  .pv-mental { background: linear-gradient(135deg, #0d1117 0%, #1a1128 100%); }
+  .pv-mental .project-visual-inner::before { background: radial-gradient(ellipse at center, rgba(130, 80, 255, 0.12) 0%, transparent 70%); }
+
+  .pv-food { background: linear-gradient(135deg, #0d1117 0%, #1a1510 100%); }
+  .pv-food .project-visual-inner::before { background: radial-gradient(ellipse at center, rgba(255, 140, 0, 0.12) 0%, transparent 70%); }
+
+  .pv-accounting { background: linear-gradient(135deg, #0d1117 0%, #0d1a14 100%); }
+  .pv-accounting .project-visual-inner::before { background: radial-gradient(ellipse at center, rgba(0, 200, 100, 0.12) 0%, transparent 70%); }
+
+  .pv-timer { background: linear-gradient(135deg, #0d1117 0%, #1a1010 100%); }
+  .pv-timer .project-visual-inner::before { background: radial-gradient(ellipse at center, rgba(255, 80, 80, 0.12) 0%, transparent 70%); }
+
+  .project-info { padding: 28px; }
+
+  .project-card.featured .project-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    color: var(--accent);
+  }
+
+  .tag.alt {
+    background: rgba(255,255,255,0.04);
+    border-color: var(--border);
+    color: var(--text-muted);
+  }
+
+  .project-info h3 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+  }
+
+  .project-info p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+
+  .project-links {
+    display: flex;
+    gap: 12px;
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 6px;
+    transition: all 0.2s;
+    background: rgba(0, 212, 255, 0.05);
+  }
+
+  .project-link:hover {
+    background: rgba(0, 212, 255, 0.12);
+    border-color: var(--accent);
+  }
+
+  .project-link.ghost {
+    color: var(--text-muted);
+    border-color: var(--border);
+    background: transparent;
+  }
+
+  .project-link.ghost:hover {
+    color: var(--text);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  .badge-nda {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+  }
+
+  /* STACK */
+  .stack { background: var(--bg2); }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    max-width: 1000px;
+  }
+
+  .stack-category {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+
+  .stack-category:hover { border-color: rgba(0, 212, 255, 0.2); }
+
+  .stack-cat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .stack-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .stack-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .stack-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  /* CONTACT */
+  .contact-inner {
+    max-width: 600px;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 48px;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+    group: true;
+  }
+
+  .contact-link:hover {
+    border-color: rgba(0, 212, 255, 0.25);
+    background: var(--surface);
+    transform: translateX(4px);
+  }
+
+  .contact-link-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .contact-link-text {
+    flex: 1;
+  }
+
+  .contact-link-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .contact-link-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .contact-link-arrow {
+    color: var(--text-dim);
+    font-size: 18px;
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .contact-link:hover .contact-link-arrow {
+    color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer p {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  footer span { color: var(--accent); }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 48px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    .hero { padding: 120px 24px 80px; }
+    .hero-stats { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 48px; }
+    .project-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+    .project-card.featured .project-visual { min-height: 200px; }
+    footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+    .divider { margin: 0 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Haseeb<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for remote work</div>
+    <h1>
+      Flutter<br>
+      <span class="line2">Developer</span><br>
+      <span class="accent">& Builder</span>
+    </h1>
+    <p class="hero-desc">
+      I build production-grade cross-platform apps for Android, iOS and Windows — with clean architecture, real backends, and UIs that feel premium.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">View My Work →</a>
+      <a href="#contact" class="btn-secondary">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">1.5<span>+</span></div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5<span>+</span></div>
+      <div class="stat-label">Apps Shipped</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3<span>+</span></div>
+      <div class="stat-label">Platforms</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-label">About Me</div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <h2 class="section-title">Building apps that<br>actually ship.</h2>
+      <p>I'm <strong>Haseeb Ahmed</strong>, a Flutter developer from Rawalpindi, Pakistan. I've been building cross-platform mobile and desktop applications professionally for over a year — starting as an intern and growing into full production responsibilities.</p>
+      <p>I don't just build UIs. I architect complete apps — from <strong>Firebase backends</strong> and real-time data flows to <strong>payment integrations</strong> and <strong>local-first storage</strong> with Hive. I care about code that's readable, scalable, and fast.</p>
+      <p>Currently pursuing a BS in Software Engineering at Virtual University of Pakistan while working full-time — which means I move fast, learn faster, and never stop building.</p>
+    </div>
+    <div class="about-cards reveal">
+      <div class="about-card">
+        <div class="about-card-icon">📐</div>
+        <h4>Clean Architecture</h4>
+        <p>Feature-based folder structure, separation of concerns, no spaghetti.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">⚡</div>
+        <h4>Riverpod State</h4>
+        <p>Modern, type-safe state management for apps that scale.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">🔥</div>
+        <h4>Firebase Backend</h4>
+        <p>Real-time data, auth, FCM push notifications, cloud storage.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">💳</div>
+        <h4>Payment Integration</h4>
+        <p>Stripe payment flows built into production app environments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Selected Work</div>
+  <h2 class="section-title reveal">Things I've built.</h2>
+  <p class="section-sub reveal">Production apps, personal projects, and everything in between.</p>
+
+  <div class="projects-grid">
+
+    <!-- Invoice App — Featured -->
+    <div class="project-card featured reveal">
+      <div class="project-visual pv-invoice">
+        <div class="project-visual-inner">🧾</div>
+      </div>
+      <div class="project-info">
+        <div class="project-tags">
+          <span class="tag">Flutter</span>
+          <span class="tag">Riverpod</span>
+          <span class="tag">Hive</span>
+          <span class="tag alt">PDF Export</span>
+          <span class="tag alt">Open Source</span>
+        </div>
+        <h3>Invoice Management App</h3>
+        <p>A full-featured invoice management app built with production-level architecture. Create, manage and export invoices as PDFs. Built with feature-based clean architecture, Riverpod state management and Hive for local persistence. This is my most complete public project.</p>
+        <div class="project-links">
+          <a href="https://github.com/Dev-with-Haseeb/flutter-invoice-management/releases" class="project-link" target="_blank">↓ Download APK</a>
+          <a href="https://github.com/Dev-with-Haseeb/flutter-invoice-management" class="project-link ghost" target="_blank">View Source</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mental Health App -->
+    <div class="project-card reveal">
+      <div class="project-visual pv-mental">
+        <div class="project-visual-inner">🧠</div>
+      </div>
+      <div class="project-info">
+        <div class="project-tags">
+          <span class="tag">Flutter</span>
+          <span class="tag">Firebase</span>
+          <span class="tag">Riverpod</span>
+          <span class="tag alt">AI Chat</span>
+        </div>
+        <h3>Mental Wellness Platform</h3>
+        <p>A beautiful mental health app built for a real client. Features AI-assisted chat flows, guided wellness interactions, Firebase backend and a modern UI that was a core design priority. One of my best looking apps.</p>
+        <div class="project-links">
+          <span class="badge-nda">🔒 Private Client Project</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Food Delivery App -->
+    <div class="project-card reveal">
+      <div class="project-visual pv-food">
+        <div class="project-visual-inner">🍕</div>
+      </div>
+      <div class="project-info">
+        <div class="project-tags">
+          <span class="tag">Flutter</span>
+          <span class="tag">Firebase</span>
+          <span class="tag">Stripe</span>
+          <span class="tag alt">Google Maps</span>
+        </div>
+        <h3>Food Delivery App</h3>
+        <p>End-to-end food delivery app with real-time order tracking via Firestore, Stripe checkout integration, Google Maps for location, and a polished ordering experience built for performance.</p>
+        <div class="project-links">
+          <a href="https://github.com/Dev-with-Haseeb" class="project-link ghost" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accounting App -->
+    <div class="project-card reveal">
+      <div class="project-visual pv-accounting">
+        <div class="project-visual-inner">📊</div>
+      </div>
+      <div class="project-info">
+        <div class="project-tags">
+          <span class="tag">Flutter</span>
+          <span class="tag alt">Windows</span>
+          <span class="tag alt">Desktop</span>
+        </div>
+        <h3>Accounting Software</h3>
+        <p>A full Flutter desktop application built for Windows. Delivered for a UAE-based client. Demonstrates that my Flutter work goes beyond mobile — I build for desktop too with proper responsive layouts.</p>
+        <div class="project-links">
+          <span class="badge-nda">🔒 Private Client Project</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timer Apps -->
+    <div class="project-card reveal">
+      <div class="project-visual pv-timer">
+        <div class="project-visual-inner">⏱️</div>
+      </div>
+      <div class="project-info">
+        <div class="project-tags">
+          <span class="tag">Flutter</span>
+          <span class="tag alt">Animations</span>
+          <span class="tag alt">Open Source</span>
+        </div>
+        <h3>Cooking Timer Apps</h3>
+        <p>Egg and steak timer apps focused purely on UI quality and smooth animations. Small scope, high polish. Built to sharpen animation skills — the kind of attention to detail that shows up in every project I build.</p>
+        <div class="project-links">
+          <a href="https://github.com/Dev-with-Haseeb" class="project-link ghost" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STACK -->
+<section class="stack" id="stack">
+  <div class="section-label">Tech Stack</div>
+  <h2 class="section-title reveal">What I work with.</h2>
+  <p class="section-sub reveal">Tools and technologies I use to build production apps.</p>
+
+  <div class="stack-grid">
+    <div class="stack-category reveal">
+      <div class="stack-cat-label">Core</div>
+      <div class="stack-items">
+        <div class="stack-item"><span class="stack-dot"></span>Flutter</div>
+        <div class="stack-item"><span class="stack-dot"></span>Dart</div>
+        <div class="stack-item"><span class="stack-dot"></span>Android</div>
+        <div class="stack-item"><span class="stack-dot"></span>iOS</div>
+        <div class="stack-item"><span class="stack-dot"></span>Windows Desktop</div>
+      </div>
+    </div>
+    <div class="stack-category reveal">
+      <div class="stack-cat-label">State & Storage</div>
+      <div class="stack-items">
+        <div class="stack-item"><span class="stack-dot"></span>Riverpod</div>
+        <div class="stack-item"><span class="stack-dot"></span>Provider</div>
+        <div class="stack-item"><span class="stack-dot"></span>GetX</div>
+        <div class="stack-item"><span class="stack-dot"></span>Hive</div>
+        <div class="stack-item"><span class="stack-dot"></span>SharedPreferences</div>
+      </div>
+    </div>
+    <div class="stack-category reveal">
+      <div class="stack-cat-label">Backend & APIs</div>
+      <div class="stack-items">
+        <div class="stack-item"><span class="stack-dot"></span>Firebase Firestore</div>
+        <div class="stack-item"><span class="stack-dot"></span>Firebase Auth</div>
+        <div class="stack-item"><span class="stack-dot"></span>Firebase FCM</div>
+        <div class="stack-item"><span class="stack-dot"></span>Firebase Storage</div>
+        <div class="stack-item"><span class="stack-dot"></span>REST APIs</div>
+      </div>
+    </div>
+    <div class="stack-category reveal">
+      <div class="stack-cat-label">Integrations</div>
+      <div class="stack-items">
+        <div class="stack-item"><span class="stack-dot"></span>Stripe Payments</div>
+        <div class="stack-item"><span class="stack-dot"></span>Google Maps</div>
+        <div class="stack-item"><span class="stack-dot"></span>AdMob</div>
+        <div class="stack-item"><span class="stack-dot"></span>Push Notifications</div>
+      </div>
+    </div>
+    <div class="stack-category reveal">
+      <div class="stack-cat-label">Tooling</div>
+      <div class="stack-items">
+        <div class="stack-item"><span class="stack-dot"></span>Git & GitHub</div>
+        <div class="stack-item"><span class="stack-dot"></span>VS Code</div>
+        <div class="stack-item"><span class="stack-dot"></span>Android Studio</div>
+        <div class="stack-item"><span class="stack-dot"></span>Figma</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title reveal">Let's work together.</h2>
+    <p class="section-sub reveal">I'm open to remote opportunities, full-time roles, and interesting projects. If you're building something great, let's talk.</p>
+
+    <div class="contact-links">
+      <a href="mailto:haseebdev8@gmail.com" class="contact-link reveal">
+        <div class="contact-link-icon">✉️</div>
+        <div class="contact-link-text">
+          <div class="contact-link-label">EMAIL</div>
+          <div class="contact-link-value">haseebdev8@gmail.com</div>
+        </div>
+        <div class="contact-link-arrow">→</div>
+      </a>
+      <a href="https://linkedin.com/in/haseeb-dev" target="_blank" class="contact-link reveal">
+        <div class="contact-link-icon">💼</div>
+        <div class="contact-link-text">
+          <div class="contact-link-label">LINKEDIN</div>
+          <div class="contact-link-value">linkedin.com/in/haseeb-dev</div>
+        </div>
+        <div class="contact-link-arrow">→</div>
+      </a>
+      <a href="https://github.com/Dev-with-Haseeb" target="_blank" class="contact-link reveal">
+        <div class="contact-link-icon">🐙</div>
+        <div class="contact-link-text">
+          <div class="contact-link-label">GITHUB</div>
+          <div class="contact-link-value">github.com/Dev-with-Haseeb</div>
+        </div>
+        <div class="contact-link-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <span>Haseeb Ahmed</span>. Built with care.</p>
+  <p>Flutter Developer — Rawalpindi, Pakistan</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Stagger children in grids
+  document.querySelectorAll('.projects-grid .reveal, .stack-grid .reveal, .about-cards .reveal, .contact-links .reveal').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.08}s`;
+  });
+</script>
+
+</body>
+</html>
